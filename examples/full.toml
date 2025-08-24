@@ -1,0 +1,20 @@
+keys = "username, hostname, shell, pkgs, separator, distro, kernel, de, ram, swap, batt, uptime, lifetime"
+
+[logo]
+method = "none" #none | img | ascii
+logo = "path/to/logo.png (images for img method, image or .txt for ascii method)"
+charset = [" ", "·", "─", "│", "┐", "└", "┘", "┌", "├", "┤", "┬", "┴", "┼", "╭", "╮", "╯", "╰", " "]
+
+[format]
+username = "{user} {host}"
+hostname = "{host}"
+shell =    "{shell}"
+pkgs =     "{native} {manager} {flatpak} {snap}"
+distro =   "{distro} {arch} {version}"
+kernel =   "{kernel}"
+de =       "{de}"
+ram =      "{total} {used} {free} {used_percentage} {free_percentage} {swap_total} {swap_used} {swap_free} {swap_used_percentage} {swap_free_percentage}"
+swap =     "{total} {used} {free} {free_percentage} {used_percentage}"
+batt =     "{level} {status}"
+uptime =   "{d} {h} {m} {s}"
+lifetime = "{y} {mo} {d} {h} {m} {s}"
