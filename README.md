@@ -18,7 +18,7 @@ Download the latest [release](https://github.com/nijon4rch/corrfetch/releases/la
 #### Build from source:
 
 ```bash
-git clone https://github.com/nijon/corrfetch
+git clone https://github.com/nijon4rch/corrfetch
 cd corrfetch
 cargo build --release
 ```
@@ -26,7 +26,7 @@ cargo build --release
 or build and install with:
 
 ```bash
-git clone https://github.com/nijon/corrfetch
+git clone https://github.com/nijon4rch/corrfetch
 cd corrfetch
 cargo install --path .
 ```
