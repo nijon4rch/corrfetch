@@ -2,7 +2,7 @@
 
 Yet another system fetch for linux, written in rust.
 
-- Supports image rendering in supported terminals (via [viuer](https://crates.io/crates/viuer)), and can automatically convert images to ascii.
+- Image rendering in supported terminals (via [viuer](https://crates.io/crates/viuer)), and can automatically convert images to ascii.
 - Also supports text coloring (see [this example](https://github.com/nijon4rch/corrfetch/blob/main/examples/nitch.toml)).
 - Configurable
 
@@ -66,7 +66,7 @@ corrfetch [OPTIONS]
 
 Example configurations can be found in the `examples` directory.
 
-Check out the [full config](https://github.com/nijon4rch/corrfetch/blob/main/examples/full.toml) to see all possible options and keys.
+Check out the [full config](https://github.com/nijon4rch/corrfetch/blob/main/examples/full.toml) example to see all possible options and keys.
 
 
 
