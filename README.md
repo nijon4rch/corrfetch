@@ -2,8 +2,9 @@
 
 Yet another system fetch for linux, written in rust.
 
-- Image rendering in supported terminals (via [viuer](https://crates.io/crates/viuer)), and can automatically convert images to ascii.
-- Also supports text coloring (see [this example](https://github.com/nijon4rch/corrfetch/blob/main/examples/nitch.toml)).
+- Image rendering in supported terminals (via [viuer](https://crates.io/crates/viuer))
+- Automatic conversion of images into ascii
+- Also supports text coloring (see [this example](https://github.com/nijon4rch/corrfetch/blob/main/examples/nitch.toml))
 - Configurable
 
 Check out the [examples](https://github.com/nijon4rch/corrfetch/tree/main/examples)!
@@ -17,16 +18,16 @@ Download the latest [release](https://github.com/nijon4rch/corrfetch/releases/la
 #### Build from source:
 
 ```bash
-git clone https://github.com/nijon/corrfetch-git
-cd corrfetch-git
+git clone https://github.com/nijon/corrfetch
+cd corrfetch
 cargo build --release
 ```
 
 or build and install with:
 
 ```bash
-git clone https://github.com/nijon/corrfetch-git
-cd corrfetch-git
+git clone https://github.com/nijon/corrfetch
+cd corrfetch
 cargo install --path .
 ```
 
