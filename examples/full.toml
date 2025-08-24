@@ -2,7 +2,7 @@ keys = "username, hostname, shell, pkgs, separator, distro, kernel, de, ram, swa
 
 [logo]
 method = "none" #none | img | ascii
-logo = "path/to/logo.png (images for img method, image or .txt for ascii method)"
+logo = "path/to/logo.png (image for img method, image or .txt for ascii method)"
 charset = [" ", "·", "─", "│", "┐", "└", "┘", "┌", "├", "┤", "┬", "┴", "┼", "╭", "╮", "╯", "╰", " "]
 
 [format]
