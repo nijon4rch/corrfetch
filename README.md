@@ -16,6 +16,7 @@ Check out the [examples](https://github.com/nijon4rch/corrfetch/tree/main/exampl
 Download the latest [release](https://github.com/nijon4rch/corrfetch/releases/latest), or
 
 #### Build from source:
+(you need rust installed)
 
 ```bash
 git clone https://github.com/nijon4rch/corrfetch
