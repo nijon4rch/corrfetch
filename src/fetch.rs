@@ -297,6 +297,7 @@ pub fn pkgs() -> Pkgs {
     .split(' ')
     .find_map(|distro| match distro {
         "arch" => Some(String::from("pacman")),
+        "artix" => Some(String::from("pacman")),
         "debian" => Some(String::from("dpkg")),
         "void" => Some(String::from("xbps")),
         "rhel" => Some(String::from("rpm")),
