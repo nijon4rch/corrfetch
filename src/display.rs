@@ -25,24 +25,31 @@ pub fn display(config: &Config, logo: Option<String>, width: Option<u32>, height
         }
     };
 
-    let conf = viuer::Config {
+let conf = viuer::Config {
         width: conf_width,
         height: conf_height,
         absolute_offset: false,
         restore_cursor: false,
         ..Default::default()
     };
-    viuer::print_from_file(
-        match logo {
-            Some(logo) => logo,
-            None => {
-                eprintln!("Please provide a path to image file!");
-                return;
-            }
-        },
-        &conf,
-    )
-    .expect("Image printing failed.");
+
+    let raw_path = match logo {
+        Some(path) => path,
+        None => {
+            eprintln!("Please provide a path to image file!");
+            return;
+        }
+    };
+
+    let path = shellexpand::full(&raw_path)
+        .unwrap_or_else(|err| {
+            eprintln!("Failed to expand path '{}': {}", raw_path, err);
+            std::process::exit(1);
+        })
+        .into_owned();
+    
+    viuer::print_from_file(&path, &conf)
+        .expect("Image printing failed.");
 
     execute!(stdout(), MoveToPreviousLine(conf_height.unwrap() as u16)).unwrap();
 
