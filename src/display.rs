@@ -9,7 +9,31 @@ use std::io::{self, BufRead, stdout};
 use std::path::Path;
 use unicode_width::UnicodeWidthStr;
 
+fn is_unsupported_console() -> bool {
+    if std::env::var("ZELLIJ").is_ok() {
+        return true;
+    }
+
+    let term = std::env::var("TERM").unwrap_or_default();
+    if term == "linux" || term == "dumb" {
+        return true;
+    }
+
+    if let Ok(path) = std::fs::read_link("/proc/self/fd/1") {
+        let path_str = path.to_string_lossy();
+
+        if path_str.starts_with("/dev/tty") {
+            return true;
+        }
+    }
+
+    false
+}
 pub fn display(config: &Config, logo: Option<String>, width: Option<u32>, height: Option<u32>) {
+    if is_unsupported_console() {
+        return display_ascii(config, logo, height);
+    }
+
     let fetch_text = format::fetch(config);
 
     let (conf_height, conf_width) = match (width, height) {
@@ -25,7 +49,7 @@ pub fn display(config: &Config, logo: Option<String>, width: Option<u32>, height
         }
     };
 
-let conf = viuer::Config {
+    let conf = viuer::Config {
         width: conf_width,
         height: conf_height,
         absolute_offset: false,
@@ -47,9 +71,8 @@ let conf = viuer::Config {
             std::process::exit(1);
         })
         .into_owned();
-    
-    viuer::print_from_file(&path, &conf)
-        .expect("Image printing failed.");
+
+    viuer::print_from_file(&path, &conf).expect("Image printing failed.");
 
     execute!(stdout(), MoveToPreviousLine(conf_height.unwrap() as u16)).unwrap();
 
@@ -88,8 +111,15 @@ pub fn display_ascii(config: &Config, logo: Option<String>, height: Option<u32>)
         fetch_text.len() as u32 + 4
     };
 
-    if let Some(logo) = logo {
-        if !logo.ends_with(".txt") {
+    if let Some(raw_logo) = logo {
+        let expanded_logo = shellexpand::full(&raw_logo)
+            .unwrap_or_else(|err| {
+                eprintln!("Failed to expand path '{}': {}", raw_logo, err);
+                std::process::exit(1);
+            })
+            .into_owned();
+
+        if !expanded_logo.ends_with(".txt") {
             let cfg = config;
             let charset: Vec<&str> = cfg
                 .logo
@@ -98,16 +128,18 @@ pub fn display_ascii(config: &Config, logo: Option<String>, height: Option<u32>)
                 .map(|c| c.iter().map(|s| s.as_str()).collect())
                 .unwrap_or_else(|| vec![".", ",", "-", "*", "£", "$", "#"]);
 
-            render_to(
-                logo,
+            if let Err(e) = render_to(
+                &expanded_logo,
                 &mut ascii,
                 &RenderOptions::new()
                     .height(conf_height as u32)
                     .colored(true)
                     .charset(&charset),
-            )
-            .unwrap();
-        } else if let Ok(lines) = read_lines(logo) {
+            ) {
+                eprintln!("Failed to render ASCII art from image: {}", e);
+                std::process::exit(1);
+            }
+        } else if let Ok(lines) = read_lines(&expanded_logo) {
             for line in lines.map_while(Result::ok) {
                 ascii.push_str(&line);
                 ascii.push('\n');
@@ -122,7 +154,8 @@ pub fn display_ascii(config: &Config, logo: Option<String>, height: Option<u32>)
         .lines()
         .map(|s| console::strip_ansi_codes(s).width())
         .max()
-        .unwrap() as u16;
+        .unwrap_or(0) as u16;
+
     let height = ascii.lines().count() as u16;
 
     ascii.lines().for_each(|s| println!("{s}"));
