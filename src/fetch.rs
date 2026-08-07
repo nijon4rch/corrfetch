@@ -81,16 +81,28 @@ pub struct Separator {
 }
 
 fn read_os_release(key: &str, key_alt: Option<&str>) -> String {
-    std::fs::read_to_string("/etc/os-release")
-        .ok()
-        .and_then(|release| {
-            release.lines().find_map(|line| {
-                line.strip_prefix(key)
-                    .or_else(|| key_alt.and_then(|alt| line.strip_prefix(alt)))
-                    .map(|val| val.trim_matches('"').to_string())
-            })
-        })
-        .unwrap_or_else(|| "Failed to read /etc/os-release!".to_string())
+    let content = std::fs::read_to_string("/etc/os-release").unwrap_or_default();
+
+    let primary = content.lines().find_map(|line| {
+        line.strip_prefix(key)
+            .map(|val| val.trim_matches('"').to_string())
+    });
+
+    if let Some(val) = primary {
+        return val;
+    }
+
+    if let Some(alt_key) = key_alt {
+        let secondary = content.lines().find_map(|line| {
+            line.strip_prefix(alt_key)
+                .map(|val| val.trim_matches('"').to_string())
+        });
+        if let Some(val) = secondary {
+            return val;
+        }
+    }
+
+    "unknown".to_string()
 }
 
 pub fn batt() -> Batt {
